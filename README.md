@@ -1,2 +1,2 @@
-[NTU_Reinforcent_Learning]
+[NTU_Reinforcement_Learning]
 Author: darrenyaoyao
