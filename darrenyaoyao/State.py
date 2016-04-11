@@ -1,22 +1,18 @@
 import random
 
 class State:
-	player_value_sum = 0
-	dealer_value_sum = 0
-	value_function = 0
-	policy = { 'hit': 0.5, 'stick': 0.5 }
-	policy_num = len(policy)
-	#policy['hit'] = random.random()
-	#policy['stick'] = 1-policy['hit']
-	policy_value_function = { 'hit': 0, 'stick': 0 }
-	reward = 0
-	processing = 'draw'
-
 	def __init__(self, player_value_sum=0, dealer_value_sum=0, reward=0, processing='draw'):
 		self.player_value_sum = player_value_sum
 		self.dealer_value_sum = dealer_value_sum
 		self.reward = reward
 		self.processing = processing
+		self.value_function = 0
+		self.policy = { 'hit': 0.5, 'stick': 0.5 }
+		self.policy_num = len(self.policy)
+		self.last_policy = 'hit'
+		#policy['hit'] = random.random()
+		#policy['stick'] = 1-policy['hit']
+		self.policy_value_function = { 'hit': 0, 'stick': 0 }
 		
 	def getaction(self):
 		if random.random() < self.policy['hit']:
@@ -28,13 +24,15 @@ class State:
 		return self.player_value_sum;
 
 	def update_policy_value_function(self, action, value):
+		#print ('Before_update: '+action, self.policy_value_function[action])
 		self.policy_value_function[action] = value
+		#print ('After_update: '+action, self.policy_value_function[action])
 
 	def epsilon_greedy(self, n0, state_num):
 		epsilon = float(n0)/float(n0+state_num)
 		max_pro = epsilon/float(self.policy_num) + 1 - epsilon
 		min_pro = epsilon/float(self.policy_num)
-		if self.policy['hit'] > self.policy['stick']:
+		if self.policy_value_function['hit'] > self.policy_value_function['stick']:
 			self.policy['hit'] = max_pro
 			self.policy['stick'] = min_pro
 		else:
@@ -42,8 +40,8 @@ class State:
 			self.policy['stick'] = max_pro
 
 	def getmax_value_function(self):
-		if self.policy['hit'] > self.policy['stick']:
-			return self.policy['hit']
+		if self.policy_value_function['hit'] > self.policy_value_function['stick']:
+			return self.policy_value_function['hit']
 		else:
-			return self.policy['stick']
+			return self.policy_value_function['stick']
 
