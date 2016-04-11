@@ -17,6 +17,7 @@ class Environment:
 		new_player_value_sum = state.player_value_sum + self.getcard()
 		print('='*36);
 		if (new_player_value_sum > 21) or (new_player_value_sum < 0) :
+			self.agents['lose'].player_value_sum = new_player_value_sum
 			return self.agents['lose']
 		else:
 			return self.agents['draw'][new_player_value_sum-1][state.dealer_value_sum-1]

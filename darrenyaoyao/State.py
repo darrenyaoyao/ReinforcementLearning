@@ -32,12 +32,18 @@ class State:
 
 	def epsilon_greedy(self, n0, state_num):
 		epsilon = float(n0)/float(n0+state_num)
-		max_pro = epsilon/float(policy_num) + 1 - epsilon
-		min_pro = epsilon/float(policy_num)
-		if policy['hit'] > policy['stick']:
-			policy['hit'] = max_pro
-			policy['stick'] = min_pro
+		max_pro = epsilon/float(self.policy_num) + 1 - epsilon
+		min_pro = epsilon/float(self.policy_num)
+		if self.policy['hit'] > self.policy['stick']:
+			self.policy['hit'] = max_pro
+			self.policy['stick'] = min_pro
 		else:
-			policy['hit'] = min_pro
-			policy['stick'] = max_pro
+			self.policy['hit'] = min_pro
+			self.policy['stick'] = max_pro
+
+	def getmax_value_function(self):
+		if self.policy['hit'] > self.policy['stick']:
+			return self.policy['hit']
+		else:
+			return self.policy['stick']
 
