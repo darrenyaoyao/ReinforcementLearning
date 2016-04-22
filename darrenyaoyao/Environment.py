@@ -39,10 +39,14 @@ class Environment:
 				self.agents['lose'].dealer_value_sum = new_dealer_value_sum
 				self.agents['lose'].player_value_sum = state.player_value_sum
 				return self.agents['lose']
-			else:
+			elif new_dealer_value_sum < state.player_value_sum:
 				self.agents['win'].dealer_value_sum = new_dealer_value_sum
 				self.agents['win'].player_value_sum = state.player_value_sum
 				return self.agents['win']
+			else:
+				self.agents['tie'].dealer_value_sum = new_dealer_value_sum
+				self.agents['tie'].player_value_sum = state.player_value_sum
+				return self.agents['tie']
 
 	def step(self, state, action):
 		#print('='*15 + 'In '+ action +'='*15);

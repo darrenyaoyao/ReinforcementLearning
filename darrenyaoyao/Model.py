@@ -6,6 +6,7 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 class Model:
 	def __init__(self, n0):
@@ -13,7 +14,9 @@ class Model:
 		self.states = [[State(i+1, j+1, 0, 'draw') for j in range(10)] for i in range(21)]
 		self.state_win = State(0, 0, 1, 'win')
 		self.state_lose = State(0, 0, -1, 'lose')
-		self.agents = {'draw': self.states, 'win': self.state_win, 'lose': self.state_lose}
+		self.state_tie = State(0, 0, 0, 'tie')
+		self.agents = {'draw': self.states, 'win': self.state_win, 
+			'lose': self.state_lose, 'tie': self.state_tie}
 		self.environment = Environment(self.agents)
 		self.current_state = self.states[random.randint(0,9)][random.randint(0,9)]
 		self.states_action_num = {}
@@ -27,7 +30,8 @@ class Model:
 
 	def easy21(self):
 		del self.states_track[:]
-		while self.current_state != self.state_win and self.current_state != self.state_lose:
+		while (self.current_state != self.state_win and self.current_state != self.state_lose 
+			and self.current_state != self.state_tie):
 			self.states_track.append(self.current_state)
 			#print ('Player number: ' + str(self.current_state.getplayer_value()) )
 			#print ('Dealer number: ' + str(self.current_state.dealer_value_sum) )
@@ -91,6 +95,12 @@ class Model:
 		ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 		fig.colorbar(surf, shrink=0.5, aspect=5)
 		plt.show()
+
+	def dump_states(self, output):
+		for i in range(21):
+			for j in range(10):
+				print self.states[i][j].__dict__
+
 
 
 
