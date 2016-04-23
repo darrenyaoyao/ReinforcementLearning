@@ -13,6 +13,7 @@ class State:
 		#policy['hit'] = random.random()
 		#policy['stick'] = 1-policy['hit']
 		self.policy_value_function = { 'hit': 0, 'stick': 0 }
+		self.eligibility_traces = { 'hit': 0, 'stick': 0}
 		
 	def getaction(self):
 		if random.random() < self.policy['hit']:
@@ -38,6 +39,9 @@ class State:
 		else:
 			self.policy['hit'] = min_pro
 			self.policy['stick'] = max_pro
+
+	def update_backwardsarsa(self, delta, lambda):
+		
 
 	def getmax_value_function(self):
 		if self.policy_value_function['hit'] > self.policy_value_function['stick']:

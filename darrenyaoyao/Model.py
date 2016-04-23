@@ -7,6 +7,7 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+from pprint import pprint
 
 class Model:
 	def __init__(self, n0):
@@ -79,6 +80,24 @@ class Model:
 									/float(self.states_action_num[x]['stick']))
 					x.update_policy_value_function('stick', update_value)
 
+	def Backward_Sarsa(self, lambda, epo):
+		action = self.current_state.getaction()
+		while (self.current_state != self.state_win and self.current_state != self.state_lose 
+			and self.current_state != self.state_tie):
+			#Sarsa algorithm
+			self.current_state.last_policy = action
+			new_state = self.environment.step(self.current_state, action)
+			new_action = new_state.getaction()
+			delta = (new_action.reward + new_state.policy_value_function[new_action] - 
+				self.current_state.policy_value_function[action])
+			self.current_state.eligibility_traces[action] += 1
+			for x in self.states:
+				x.update_backwardsarsa(n0, delta, lambda)
+
+
+
+		self.current_state = self.states[random.randint(0,9)][random.randint(0,9)]
+
 	def surface_plot(self):
 		fig = plt.figure()
 		ax = fig.gca(projection='3d')
@@ -97,9 +116,18 @@ class Model:
 		plt.show()
 
 	def dump_states(self, output):
-		for i in range(21):
-			for j in range(10):
-				print self.states[i][j].__dict__
+		with open(output, 'w') as outfile:
+			for i in range(21):
+				for j in range(10):
+					json.dump(self.states[i][j].__dict__, outfile)
+					outfile.write("\n")
+
+	def load_states(self, datafile):
+		self.targetstates = [[State(i+1, j+1, 0, 'draw') for j in range(10)] for i in range(21)]
+		with open(datafile) as data_file: 
+			for i in range(21):
+				for j in range(10):  
+					self.targetstates[i][j].__dict__ = json.loads(data_file.readline())
 
 
 
