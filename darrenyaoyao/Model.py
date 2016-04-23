@@ -80,23 +80,29 @@ class Model:
 									/float(self.states_action_num[x]['stick']))
 					x.update_policy_value_function('stick', update_value)
 
-	def Backward_Sarsa(self, lambda, epo):
-		action = self.current_state.getaction()
-		while (self.current_state != self.state_win and self.current_state != self.state_lose 
-			and self.current_state != self.state_tie):
-			#Sarsa algorithm
-			self.current_state.last_policy = action
-			new_state = self.environment.step(self.current_state, action)
-			new_action = new_state.getaction()
-			delta = (new_action.reward + new_state.policy_value_function[new_action] - 
-				self.current_state.policy_value_function[action])
-			self.current_state.eligibility_traces[action] += 1
-			for x in self.states:
-				x.update_backwardsarsa(n0, delta, lambda)
-
-
-
-		self.current_state = self.states[random.randint(0,9)][random.randint(0,9)]
+	def backward_sarsa_control(self, epo, lambda_):
+		for x in range(epo):
+			for i in range(21):
+					for j in range(10):
+						self.states[i][j].eligibility_traces_zero()
+			action = self.current_state.getaction()
+			while (self.current_state != self.state_win and self.current_state != self.state_lose 
+				and self.current_state != self.state_tie):
+				self.states_action_num[self.current_state][action] += 1
+				step_size_dict = self.states_action_num[self.current_state]
+				#Sarsa algorithm
+				self.current_state.last_policy = action
+				new_state = self.environment.step(self.current_state, action)
+				new_action = new_state.getaction()
+				delta = (new_state.reward + new_state.policy_value_function[new_action] - 
+					self.current_state.policy_value_function[action])
+				self.current_state.eligibility_traces[action] += 1
+				for i in range(21):
+					for j in range(10):
+						self.states[i][j].update_backwardsarsa(step_size_dict, delta, lambda_)
+				self.current_state = new_state
+				action = new_action
+			self.current_state = self.states[random.randint(0,9)][random.randint(0,9)]
 
 	def surface_plot(self):
 		fig = plt.figure()

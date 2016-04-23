@@ -40,8 +40,15 @@ class State:
 			self.policy['hit'] = min_pro
 			self.policy['stick'] = max_pro
 
-	def update_backwardsarsa(self, delta, lambda):
-		
+	def update_backwardsarsa(self, step_size_dict, delta, lambda_):
+		for policy in self.policy_value_function:
+			if step_size_dict[policy] != 0:
+				self.policy_value_function[policy] += delta*self.eligibility_traces[policy]/step_size_dict[policy]
+			self.eligibility_traces[policy] *= lambda_
+
+	def eligibility_traces_zero(self):
+		self.eligibility_traces['hit'] = 0
+		self.eligibility_traces['stick'] = 0
 
 	def getmax_value_function(self):
 		if self.policy_value_function['hit'] > self.policy_value_function['stick']:
