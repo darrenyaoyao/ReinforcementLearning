@@ -7,10 +7,10 @@ class Environment:
     def getcard(self):
         num = int(random.randint(0,9)+1)
         if random.random() < 1/3:
-            print ('Get red '+str(num))
+           # print ('Get red '+str(num))
             return -1*num
         else:
-            print ('Get black '+str(num))
+           # print ('Get black '+str(num))
             return num
 
     def agent_hit(self, state):

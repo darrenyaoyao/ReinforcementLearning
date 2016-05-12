@@ -5,7 +5,7 @@ class State:
     def __init__(self, player_value_sum=0, dealer_value_sum=0,status='processing'):
         self.player_value_sum = player_value_sum
         self.dealer_value_sum = dealer_value_sum
-        self.process = process
+        self.status = status
         self.action = { 'hit' : [0,0],'stick':[0,0] }
         # action : [Q value, N visited]
         self.policy = { 'hit' :0.5,'stick':0.5}
