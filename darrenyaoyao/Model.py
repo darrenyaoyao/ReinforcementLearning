@@ -85,7 +85,6 @@ class Model:
 			while (self.current_state != self.state_win and self.current_state != self.state_lose 
 				and self.current_state != self.state_tie):
 				self.states_action_num[self.current_state][action] += 1
-				step_size_dict = self.states_action_num[self.current_state]
 				#Sarsa algorithm
 				self.current_state.last_policy = action
 				new_state = self.environment.step(self.current_state, action)
@@ -94,16 +93,21 @@ class Model:
 				new_action = new_state.getaction()
 				delta = (new_state.reward + new_state.policy_value_function[new_action] - 
 					self.current_state.policy_value_function[action])
-				self.current_state.eligibility_traces[action] += 1
-				for i in range(21):
-					for j in range(10):
-						self.states[i][j].update_backwardsarsa(step_size_dict, delta, lambda_)
+				self.backward_sarsa_control_update_value(delta, lambda_, action)
 				self.current_state = new_state
 				action = new_action
 			self.current_state = self.states[random.randint(0,9)][random.randint(0,9)]
 
+	def backward_sarsa_control_update_value(self, delta, lambda_, action):
+		for i in range(21):
+			for j in range(10):
+				self.states[i][j].update_eligibility_traces(lambda_)
+		self.current_state.eligibility_traces[action] += 1
+		for i in range(21):
+			for j in range(10):
+				self.states[i][j].update_backwardsarsa(self.states_action_num[self.current_state], delta)
+
 	def backward_sarsa_control_linear_function_appro(self, epo, lambda_):
-		print (self.weight)
 		for x in range(epo):
 			eligibility_traces = np.zeros(36)
 			action = self.current_state.getaction()
@@ -124,7 +128,10 @@ class Model:
 				self.current_state = new_state
 				action = new_action
 			self.current_state = self.states[random.randint(0,9)][random.randint(0,9)]
-		print (self.weight)
+			for i in range(21):
+				for j in range(10):
+					self.states[i][j].update_policy_value_function('hit', np.dot(self.feature(self.states[i][j], 'hit'), self.weight))
+					self.states[i][j].update_policy_value_function('stick', np.dot(self.feature(self.states[i][j], 'stick'), self.weight))
 
 	def feature(self, state, action):
 		feature = np.zeros(36)
