@@ -6,6 +6,7 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 class Model:
 	def __init__(self, n0):
@@ -59,9 +60,32 @@ class Model:
 		for i in range(iteration):
 			self.mc_policy_evaluation()
 			self.exploration("epsilonGreedy")
-			print ('Iteration: '+str(i))
+			print ("Iteration: "+ str(i))
+	
+	def backward_sarsa_control(self, iteration, lamda):
+		for it in range(iteration):
+			for i in range(10):
+				for j in range(21):
+					self.states[i][j].eligibility_traces_zero()
+			self.currentState = self.states[random.randint(0, 9)][random.randint(0, 9)]
+			action = self.currentState.getAction()
+			while self.currentState.status == "playing":
+				self.currentState.update_state_action_num(action)
+				newState = self.environment.step(self.currentState, action)
+				newState.epsilonGreedy(self.n0, newState.state_action_num["hit"] + 
+															newState.state_action_num["stick"])
+				newAction = newState.getAction()
+				delta = (newState.reward + newState.action_value_function[newAction] -
+							self.currentState.action_value_function[action])
+				self.currentState.eligibility_traces[action] += 1
+				for i in range(10):
+					for j in range(21):
+						self.states[i][j].update_backward_sarsa(delta, lamda)
+				self.currentState = newState
+				action = newAction
+			print ("Iteration: " + str(it))
 
-	def surfacePlot(self):
+	def surface_plot(self):
 		fig = plt.figure()
 		ax = fig.gca(projection='3d')
 		x = np.arange(1, 11, 1)
@@ -76,4 +100,10 @@ class Model:
 		ax.zaxis.set_major_locator(LinearLocator(10))
 		ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 		fig.colorbar(surf, shrink=0.5, aspect=5)
-		plt.show()		
+		plt.show()
+	def dump_states(self, output):
+		with open(output, 'w') as outfile:
+			for i in range(10):
+				for j in range(21):
+					json.dump(self.states[i][j].__dict__, outfile)
+					outfile.write("\n")		
