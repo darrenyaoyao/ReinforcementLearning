@@ -1,6 +1,11 @@
 from Model import Model
 
-model = Model(500)
-model.mc_control(5000000)
-model.dump_states("5000000i_result.json")
-model.surface_plot()
+<<<<<<< HEAD
+model = Model(100)
+model.mc_control(1000000)
+model.surfacePlot()
+=======
+model = Model(100)
+model.mc_control(1000000)
+model.surfacePlot()
+>>>>>>> c559dfc3d6d7ae159186986b343e2d17b4473703

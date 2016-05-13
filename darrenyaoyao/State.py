@@ -40,6 +40,16 @@ class State:
 			self.policy['hit'] = min_pro
 			self.policy['stick'] = max_pro
 
+	def epsilon_greedy_constepsilon(self, epsilon):
+		max_pro = epsilon/float(self.policy_num) + 1 - epsilon
+		min_pro = epsilon/float(self.policy_num)
+		if self.policy_value_function['hit'] > self.policy_value_function['stick']:
+			self.policy['hit'] = max_pro
+			self.policy['stick'] = min_pro
+		else:
+			self.policy['hit'] = min_pro
+			self.policy['stick'] = max_pro
+
 	def update_backwardsarsa(self, step_size_dict, delta, lambda_):
 		for policy in self.policy_value_function:
 			if step_size_dict[policy] != 0:
