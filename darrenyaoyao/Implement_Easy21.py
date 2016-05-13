@@ -5,12 +5,13 @@ import random
 states = [[State(i+1, j+1, 0, 'draw') for j in range(10)] for i in range(21)]
 state_win = State(0, 0, 1, 'win')
 state_lose = State(0, 0, -1, 'lose')
-agents = {'draw': states, 'win': state_win, 'lose': state_lose}
+state_tie = State(0, 0, 0, 'tie')
+agents = {'draw': states, 'win': state_win, 'lose': state_lose, 'tie': state_tie}
 environment = Environment(agents)
 
 current_state = states[random.randint(0,9)][random.randint(0,9)]
 
-while current_state != state_win and current_state != state_lose:
+while current_state != state_win and current_state != state_lose and current_state != state_tie: 
 	print ('Player number: ' + str(current_state.getplayer_value()) )
 	print ('Dealer number: ' + str(current_state.dealer_value_sum) )
 	current_state = environment.step(current_state, current_state.getaction())
