@@ -10,10 +10,9 @@ class Environment:
 		else:
 			return num
 	def agentHit(self, state):
-		dealer_sum = state.dealer_sum
 		player_sum = state.player_sum + self.getCard()
 		if player_sum > 21 or player_sum < 1:
-			self.agent["lose"].setValues(dealer_sum, player_sum)
+			self.agent["lose"].setValues(state.dealer_sum, player_sum)
 			return self.agent["lose"]
 		else:
 			return self.agent["playing"][state.dealer_sum-1][player_sum-1]
