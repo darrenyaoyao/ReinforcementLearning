@@ -7,13 +7,14 @@ class Environment:
     def getcard(self):
         num = int(random.randint(0,9)+1)
         if random.random() < 1/3:
-            print ('Get red '+str(num))
+            print ('Get card: red '+str(num))
             return -1*num
         else:
-            print ('Get black '+str(num))
+            print ('Get card: black '+str(num))
             return num
 
     def agent_hit(self, state):
+        print ("Agent get card : " ,end='' )
         new_player_value_sum = state.player_value_sum + self.getcard()
         if (new_player_value_sum > 21) or (new_player_value_sum < 1):
             self.agents['lose'].player_value_sum = new_player_value_sum
@@ -27,6 +28,7 @@ class Environment:
         new_dealer_value_sum = state.dealer_value_sum
         #dealer get cars
         while not terminal:
+            print ("Dealer get card : " ,end='' )
             new_dealer_value_sum += self.getcard()
             if new_dealer_value_sum > 17 or new_dealer_value_sum < 1:
                 terminal = True

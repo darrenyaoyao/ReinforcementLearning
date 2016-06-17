@@ -51,7 +51,8 @@ class Model:
         x, y = np.meshgrid(x, y)
         for i in range(10):
             for j in range(21):
-                z[j][i] = self.states[j][i].getmax_value_function()
+                #z[j][i] = self.states[j][i].getmax_value_function()
+                z[j][i] = self.states[j][i].policy['stick']
         surf = ax.plot_surface(x, y, z, rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
         ax.set_zlim(-1, 1)
         ax.zaxis.set_major_locator(LinearLocator(10))

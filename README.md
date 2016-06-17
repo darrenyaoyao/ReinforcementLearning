@@ -1,3 +1,3 @@
 [NTU_Reinforcement_Learning]
-Author: darrenyaoyao
+Author: darrenyaoyao, alex84726
 
